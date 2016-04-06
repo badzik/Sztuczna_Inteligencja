@@ -1,0 +1,2 @@
+# Sztuczna_Inteligencja
+Projekt
