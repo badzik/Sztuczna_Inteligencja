@@ -5,19 +5,18 @@
  */
 package com.mycompany.sztucznainteligencja;
 
+import java.awt.Dimension;
 import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
 import java.io.File;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 /**
  *
@@ -33,6 +32,8 @@ public class MainWindow extends javax.swing.JFrame {
     
     public MainWindow() {
         initComponents();
+        setLocationRelativeTo(null);
+        setTitle("Image compression");
         logTextArea.append("Uruchomiono program\n");
     }
 
@@ -48,10 +49,11 @@ public class MainWindow extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         logTextArea = new javax.swing.JTextArea();
         compressButton = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        sizeComboBox = new javax.swing.JComboBox<>();
-        jLabel2 = new javax.swing.JLabel();
+        SizeOfFrameLabel = new javax.swing.JLabel();
+        sizeComboBox = new javax.swing.JComboBox<String>();
+        NumberOfNeuronsLabel = new javax.swing.JLabel();
         numberofneuronsTextField = new javax.swing.JTextField();
+        DisplayLabel = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         openMenuItem = new javax.swing.JMenuItem();
@@ -72,11 +74,11 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("Size of frame:");
+        SizeOfFrameLabel.setText("Size of frame:");
 
-        sizeComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2", "3", "4" }));
+        sizeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "2", "3", "4" }));
 
-        jLabel2.setText("Number of neurons:");
+        NumberOfNeuronsLabel.setText("Number of neurons:");
 
         jMenu1.setText("File");
 
@@ -98,35 +100,41 @@ public class MainWindow extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane1)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(418, Short.MAX_VALUE)
-                .addComponent(compressButton)
-                .addGap(416, 416, 416))
             .addGroup(layout.createSequentialGroup()
-                .addGap(67, 67, 67)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(sizeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(numberofneuronsTextField))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(31, 31, 31)
+                        .addComponent(DisplayLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 387, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(40, 40, 40)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(SizeOfFrameLabel)
+                            .addComponent(NumberOfNeuronsLabel))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(numberofneuronsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(sizeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(97, 97, 97)
+                                .addComponent(compressButton)))
+                        .addGap(57, 57, 57)))
+                .addContainerGap(495, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(sizeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(SizeOfFrameLabel)
+                    .addComponent(sizeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(compressButton))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
+                    .addComponent(NumberOfNeuronsLabel)
                     .addComponent(numberofneuronsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(78, 78, 78)
-                .addComponent(compressButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 168, Short.MAX_VALUE)
+                .addGap(24, 24, 24)
+                .addComponent(DisplayLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -139,12 +147,24 @@ public class MainWindow extends javax.swing.JFrame {
         int returnvalue = fc.showOpenDialog(this);
         if (returnvalue == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
-            String[] divided=file.getName().split("\\.");
-            if (divided[divided.length-1].equalsIgnoreCase("JPG")) {
+            String[] divided = file.getName().split("\\.");
+            if (divided[divided.length - 1].equalsIgnoreCase("JPG")) {
                 try {
-                    image=ImageIO.read(file);
+                    
+                    image = ImageIO.read(file);
+                    ImageIcon icon = new ImageIcon(image);
+                    
+                    DisplayLabel.setIcon(icon);
+                    Dimension imageSize = new Dimension(icon.getIconWidth(), icon.getIconHeight());
+                    DisplayLabel.setPreferredSize(imageSize);
+                    DisplayLabel.setHorizontalAlignment(JLabel.CENTER);
+                    DisplayLabel.setVerticalAlignment(JLabel.CENTER);
+                    DisplayLabel.revalidate();
+                    DisplayLabel.repaint();
+
                     logTextArea.append("Wczytano obraz\n");
                     compressButton.setEnabled(true);
+                    
                 } catch (IOException ex) {
                     Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -155,11 +175,11 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_openMenuItemActionPerformed
 
     private void compressButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_compressButtonActionPerformed
-          ColorSpace cs = ColorSpace.getInstance(ColorSpace.CS_GRAY);
-           ColorConvertOp op = new ColorConvertOp(cs, null);
-           grayscale = op.filter(image, null);
-           logTextArea.append("Dokonano konwersji na obraz czarno-biały\n");
-           Compress.divide(grayscale, 100);
+        ColorSpace cs = ColorSpace.getInstance(ColorSpace.CS_GRAY);
+        ColorConvertOp op = new ColorConvertOp(cs, null);
+        grayscale = op.filter(image, null);
+        logTextArea.append("Dokonano konwersji na obraz czarno-biały\n");
+        Compress.divide(grayscale, 100);
     }//GEN-LAST:event_compressButtonActionPerformed
 
     /**
@@ -198,9 +218,10 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel DisplayLabel;
+    private javax.swing.JLabel NumberOfNeuronsLabel;
+    private javax.swing.JLabel SizeOfFrameLabel;
     private javax.swing.JButton compressButton;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
