@@ -6,6 +6,7 @@
 package com.mycompany.sztucznainteligencja;
 
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
@@ -150,21 +151,27 @@ public class MainWindow extends javax.swing.JFrame {
             String[] divided = file.getName().split("\\.");
             if (divided[divided.length - 1].equalsIgnoreCase("JPG")) {
                 try {
-                    
+
                     image = ImageIO.read(file);
                     ImageIcon icon = new ImageIcon(image);
-                    
+
+                    if (icon.getIconHeight() > icon.getIconWidth()) {
+                        icon = new ImageIcon(icon.getImage().getScaledInstance(-1, DisplayLabel.getHeight(), BufferedImage.SCALE_SMOOTH));
+                    } else {
+                        icon = new ImageIcon(icon.getImage().getScaledInstance(DisplayLabel.getWidth(), -1, BufferedImage.SCALE_SMOOTH));
+                    }
                     DisplayLabel.setIcon(icon);
+
                     Dimension imageSize = new Dimension(icon.getIconWidth(), icon.getIconHeight());
                     DisplayLabel.setPreferredSize(imageSize);
                     DisplayLabel.setHorizontalAlignment(JLabel.CENTER);
                     DisplayLabel.setVerticalAlignment(JLabel.CENTER);
                     DisplayLabel.revalidate();
                     DisplayLabel.repaint();
-
+                    
                     logTextArea.append("Wczytano obraz\n");
                     compressButton.setEnabled(true);
-                    
+
                 } catch (IOException ex) {
                     Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
                 }
