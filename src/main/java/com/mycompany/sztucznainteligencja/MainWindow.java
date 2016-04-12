@@ -38,6 +38,25 @@ public class MainWindow extends javax.swing.JFrame {
         logTextArea.append("Uruchomiono program\n");
     }
 
+    public void DisplayImage(BufferedImage img) {
+        
+        ImageIcon icon = new ImageIcon(img);
+
+        if (icon.getIconHeight() > icon.getIconWidth()) {
+            icon = new ImageIcon(icon.getImage().getScaledInstance(-1, DisplayLabel.getHeight(), BufferedImage.SCALE_SMOOTH));
+        } else {
+            icon = new ImageIcon(icon.getImage().getScaledInstance(DisplayLabel.getWidth(), -1, BufferedImage.SCALE_SMOOTH));
+        }
+        DisplayLabel.setIcon(icon);
+
+        Dimension imageSize = new Dimension(icon.getIconWidth(), icon.getIconHeight());
+        DisplayLabel.setPreferredSize(imageSize);
+        DisplayLabel.setHorizontalAlignment(JLabel.CENTER);
+        DisplayLabel.setVerticalAlignment(JLabel.CENTER);
+        DisplayLabel.revalidate();
+        DisplayLabel.repaint();
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -153,21 +172,7 @@ public class MainWindow extends javax.swing.JFrame {
                 try {
 
                     image = ImageIO.read(file);
-                    ImageIcon icon = new ImageIcon(image);
-
-                    if (icon.getIconHeight() > icon.getIconWidth()) {
-                        icon = new ImageIcon(icon.getImage().getScaledInstance(-1, DisplayLabel.getHeight(), BufferedImage.SCALE_SMOOTH));
-                    } else {
-                        icon = new ImageIcon(icon.getImage().getScaledInstance(DisplayLabel.getWidth(), -1, BufferedImage.SCALE_SMOOTH));
-                    }
-                    DisplayLabel.setIcon(icon);
-
-                    Dimension imageSize = new Dimension(icon.getIconWidth(), icon.getIconHeight());
-                    DisplayLabel.setPreferredSize(imageSize);
-                    DisplayLabel.setHorizontalAlignment(JLabel.CENTER);
-                    DisplayLabel.setVerticalAlignment(JLabel.CENTER);
-                    DisplayLabel.revalidate();
-                    DisplayLabel.repaint();
+                    DisplayImage(image);
                     
                     logTextArea.append("Wczytano obraz\n");
                     compressButton.setEnabled(true);
@@ -185,6 +190,7 @@ public class MainWindow extends javax.swing.JFrame {
         ColorSpace cs = ColorSpace.getInstance(ColorSpace.CS_GRAY);
         ColorConvertOp op = new ColorConvertOp(cs, null);
         grayscale = op.filter(image, null);
+        DisplayImage(grayscale);
         logTextArea.append("Dokonano konwersji na obraz czarno-biały\n");
         Compress.divide(grayscale, 100);
     }//GEN-LAST:event_compressButtonActionPerformed
