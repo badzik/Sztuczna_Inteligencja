@@ -12,6 +12,7 @@ import java.awt.image.BufferedImage;
  * @author badzik
  */
 public class MyImage {
+    //test commit
     static BufferedImage[][] divide(BufferedImage img, int size) {
         int sizex, sizey;  //ilosc ramek
         int tempx = 0, tempy = 0; // lokalizacja w poszczególnych ramkach
