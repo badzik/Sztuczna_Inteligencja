@@ -15,23 +15,25 @@ import java.util.Random;
  */
 public class Neuron {
 
-    private Integer[] weights;
+    public Double[] weights;
     private Integer size;
-
+    public Integer L; //liczba zwycięstw
+    
     public Neuron() {
+        L=0;
     }
 
-    public Integer[] getWeights() {
+    public Double[] getWeights() {
         return weights;
     }
 
     public void randomize(int numberofweights) {
         Random rand = new Random();
-        weights=new Integer[numberofweights];
-        int r;
+        weights=new Double[numberofweights];
+        Integer r;
         for (int j = 0; j < numberofweights; j++) {
             r = rand.nextInt(256) + 0;
-            weights[j]=r;
+            weights[j]=r.doubleValue();
         }
 
     }

@@ -36,6 +36,7 @@ public class MainWindow extends javax.swing.JFrame {
     private BufferedImage image;
     private BufferedImage grayscale;
     private BufferedImage[][] dividedimage;
+    private Integer[][] result;
 
     public MainWindow() {
         initComponents();
@@ -222,6 +223,24 @@ public class MainWindow extends javax.swing.JFrame {
             neurons[i].randomize(sizeofframe * sizeofframe);
             logTextArea.append("Wylosowano wagi dla neuronu nr." + i + " : " + Arrays.toString(neurons[i].getWeights())+"\n");
         }
+        
+        logTextArea.append("Rozpoczęcie procesu uczenia\n");
+        Compress.learningPhase(dividedimage, neurons, Integer.parseInt(cyclesTextField.getText()) , sizeofframe);
+        logTextArea.append("Zakończenie procesu uczenia\n");
+        
+        for (int i = 0; i < numberofneurons; i++) {
+            logTextArea.append("Po zmianie dla nr." + i + " : " + Arrays.toString(neurons[i].getWeights())+"\n");
+        }
+        
+        result=Compress.compress(dividedimage, neurons, sizeofframe);
+        int i=0,j=0;
+        for(i=0;i<result.length;i++){
+            for(j=0;j<result[i].length;j++){
+                System.out.println(result[i][j]+ " ");
+            }
+        }
+        System.out.println("ROzmiar:"+i*j);
+        
     }//GEN-LAST:event_compressButtonActionPerformed
 
     /**
