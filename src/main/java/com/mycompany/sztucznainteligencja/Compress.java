@@ -8,6 +8,8 @@ package com.mycompany.sztucznainteligencja;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -18,66 +20,48 @@ import javax.imageio.ImageIO;
  */
 public class Compress {
 
-    static BufferedImage[][] divide(BufferedImage img, int size) {
-        int sizex, sizey;  //ilosc ramek
-        int tempx = 0, tempy = 0; // lokalizacja w poszczególnych ramkach
-        int bufx = 0, bufy = 0; // lokalizacaja ramki
-        int rgb;
-        sizey = (int) (img.getHeight() / size);
-        sizex = (int) (img.getWidth() / size);
-        BufferedImage[][] retframes = new BufferedImage[sizex][sizey];
-        for (int i = 0; i < sizey; i++) {
-            for (int j = 0; j < sizex; j++) {
-                retframes[j][i] = new BufferedImage(size, size, BufferedImage.TYPE_BYTE_GRAY);
-            }
-        }
-        /*        BufferedImage test=new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
-        for(int i=0;i<img.getHeight();i++){
-        for(int j=0;j<img.getWidth();j++){
-        test.setRGB(j, i, img.getRGB(j, i));
-        }
-        }*/
-        for (int i = 0; i < img.getHeight()-(img.getHeight()%size); i++) {
-            for (int j = 0; j < img.getWidth()-(img.getWidth()%size); j++) {
-                rgb = img.getRGB(j, i);
-                retframes[bufx][bufy].setRGB(tempx, tempy, rgb);
-                tempx++;
-                if (tempx == size) {
-                    tempx = 0;
-                    bufx++;
-                    if (bufx == sizex) {
-                        bufx = 0;
-                    }
+    public static void learningPhase(BufferedImage[][] dividedimage, Neuron[] neurons, int numberofcycles,int sizeofframe) {
+        Random rand = new Random();
+        BufferedImage tempimg;
+        Integer x,y;
+        Integer pos=0;
+        Integer actualwinner;
+        Double tempsum[]=new Double[neurons.length];
+        Double n=0.3; //współczynnik syzbkości uczenia
+        Integer[] learningvalues=new Integer[sizeofframe*sizeofframe];
+        
+        //losowanie danych uczących
+        for (int i = 0; i < numberofcycles; i++) {
+            x = rand.nextInt(dividedimage.length) + 0;
+            y = rand.nextInt(dividedimage[0].length) + 0;
+            tempimg=dividedimage[x][y];
+            for(int j=0;i<sizeofframe;i++){
+                for(int k=0;j<sizeofframe;j++){
+                    learningvalues[pos]=tempimg.getRGB(j, k);
+                    pos++;
                 }
             }
-            tempy++;
-            if (tempy == size) {
-                tempy = 0;
-                bufy++;
-                if (bufy == sizey) {
-                    bufy = 0;
-                }
-            }
+            pos=0;
             
+            //szukanie zwycieskiego neuronu
+            for(int k=0;k<neurons.length;k++){
+                for(int j=0;j<learningvalues.length;j++){
+                    tempsum[k]=Math.pow(learningvalues[j]-neurons[k].getWeights()[j], 2);
+                }
+                tempsum[k]=Math.sqrt(tempsum[k]);
+            }
+            actualwinner=minValue(tempsum);
+            
+            n=n-(0.1*n);
         }
-        File outputfile = new File("sav1.jpg");
-        try {
-            ImageIO.write(retframes[1][2], "jpg", outputfile);
-        } catch (IOException ex) {
-            Logger.getLogger(Compress.class.getName()).log(Level.SEVERE, null, ex);
+
+    }
+    
+    private static int minValue(Double[] numbers){
+        int min=0;
+        for(int i=1;i<numbers.length;i++){
+            if(numbers[min]>numbers[i]) min=i;
         }
-                        File outputfile2 = new File("sav2.jpg");
-        try {
-        ImageIO.write(retframes[2][2], "jpg", outputfile2);
-        } catch (IOException ex) {
-        Logger.getLogger(Compress.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        File outputfile3 = new File("sav3.jpg");
-        try {
-        ImageIO.write(retframes[1][3], "jpg", outputfile3);
-        } catch (IOException ex) {
-        Logger.getLogger(Compress.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return retframes;
+        return min;
     }
 }

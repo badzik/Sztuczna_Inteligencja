@@ -12,6 +12,8 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -28,9 +30,13 @@ public class MainWindow extends javax.swing.JFrame {
     /**
      * Creates new form MainWindow
      */
+    private Neuron[] neurons;
+    private int numberofneurons;
+    private int sizeofframe;
     private BufferedImage image;
     private BufferedImage grayscale;
-    
+    private BufferedImage[][] dividedimage;
+
     public MainWindow() {
         initComponents();
         setLocationRelativeTo(null);
@@ -39,7 +45,7 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     public void DisplayImage(BufferedImage img) {
-        
+
         ImageIcon icon = new ImageIcon(img);
 
         if (icon.getIconHeight() > icon.getIconWidth()) {
@@ -70,10 +76,12 @@ public class MainWindow extends javax.swing.JFrame {
         logTextArea = new javax.swing.JTextArea();
         compressButton = new javax.swing.JButton();
         SizeOfFrameLabel = new javax.swing.JLabel();
-        sizeComboBox = new javax.swing.JComboBox<String>();
+        sizeComboBox = new javax.swing.JComboBox<>();
         NumberOfNeuronsLabel = new javax.swing.JLabel();
         numberofneuronsTextField = new javax.swing.JTextField();
         DisplayLabel = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        cyclesTextField = new javax.swing.JTextField();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         openMenuItem = new javax.swing.JMenuItem();
@@ -96,9 +104,11 @@ public class MainWindow extends javax.swing.JFrame {
 
         SizeOfFrameLabel.setText("Size of frame:");
 
-        sizeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "2", "3", "4" }));
+        sizeComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2", "3", "4" }));
 
         NumberOfNeuronsLabel.setText("Number of neurons:");
+
+        jLabel1.setText("Numer of learning cycles:");
 
         jMenu1.setText("File");
 
@@ -121,40 +131,47 @@ public class MainWindow extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane1)
             .addGroup(layout.createSequentialGroup()
+                .addGap(40, 40, 40)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(SizeOfFrameLabel)
+                    .addComponent(NumberOfNeuronsLabel)
+                    .addComponent(jLabel1))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(31, 31, 31)
-                        .addComponent(DisplayLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 387, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(40, 40, 40)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(SizeOfFrameLabel)
-                            .addComponent(NumberOfNeuronsLabel))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(numberofneuronsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(sizeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(97, 97, 97)
-                                .addComponent(compressButton)))
-                        .addGap(57, 57, 57)))
-                .addContainerGap(495, Short.MAX_VALUE))
+                        .addComponent(sizeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(97, 97, 97)
+                        .addComponent(compressButton)
+                        .addContainerGap(521, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(numberofneuronsTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
+                            .addComponent(cyclesTextField))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(DisplayLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 387, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(45, 45, 45))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(SizeOfFrameLabel)
-                    .addComponent(sizeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(compressButton))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(compressButton)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(SizeOfFrameLabel)
+                        .addComponent(sizeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(NumberOfNeuronsLabel)
-                    .addComponent(numberofneuronsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(24, 24, 24)
-                .addComponent(DisplayLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(NumberOfNeuronsLabel)
+                            .addComponent(numberofneuronsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(cyclesTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(DisplayLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -173,7 +190,7 @@ public class MainWindow extends javax.swing.JFrame {
 
                     image = ImageIO.read(file);
                     DisplayImage(image);
-                    
+
                     logTextArea.append("Wczytano obraz\n");
                     compressButton.setEnabled(true);
 
@@ -192,7 +209,19 @@ public class MainWindow extends javax.swing.JFrame {
         grayscale = op.filter(image, null);
         DisplayImage(grayscale);
         logTextArea.append("Dokonano konwersji na obraz czarno-biały\n");
-        Compress.divide(grayscale, 100);
+        sizeofframe = Integer.parseInt(sizeComboBox.getSelectedItem().toString());
+        dividedimage = MyImage.divide(grayscale, sizeofframe);
+        logTextArea.append("Podzeielono ekran na " + (dividedimage[0].length * dividedimage.length) + "\n");
+
+        //Inicjacja neuronów
+        numberofneurons = Integer.parseInt(numberofneuronsTextField.getText());
+        neurons = new Neuron[numberofneurons];
+
+        for (int i = 0; i < numberofneurons; i++) {
+            neurons[i] = new Neuron();
+            neurons[i].randomize(sizeofframe * sizeofframe);
+            logTextArea.append("Wylosowano wagi dla neuronu nr." + i + " : " + Arrays.toString(neurons[i].getWeights())+"\n");
+        }
     }//GEN-LAST:event_compressButtonActionPerformed
 
     /**
@@ -235,6 +264,8 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel NumberOfNeuronsLabel;
     private javax.swing.JLabel SizeOfFrameLabel;
     private javax.swing.JButton compressButton;
+    private javax.swing.JTextField cyclesTextField;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;

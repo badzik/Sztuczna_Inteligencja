@@ -7,23 +7,32 @@ package com.mycompany.sztucznainteligencja;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  *
  * @author badzik
  */
 public class Neuron {
-    private List<Integer> weights=new ArrayList<>();
+
+    private Integer[] weights;
     private Integer size;
 
     public Neuron() {
     }
-    
-    public List<Integer> getWeights(){
+
+    public Integer[] getWeights() {
         return weights;
     }
-    
-    public void randomize(List<Integer> random){
-        weights=random;
+
+    public void randomize(int numberofweights) {
+        Random rand = new Random();
+        weights=new Integer[numberofweights];
+        int r;
+        for (int j = 0; j < numberofweights; j++) {
+            r = rand.nextInt(256) + 0;
+            weights[j]=r;
+        }
+
     }
 }
